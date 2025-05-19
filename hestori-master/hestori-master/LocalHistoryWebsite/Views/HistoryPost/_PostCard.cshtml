@@ -1,88 +1,131 @@
 ﻿@model HistoryPost
 
 <div class="card h-100 shadow">
-    @if (Model.Images.Any())
-    {
-        <div id="carousel-@Model.Id" class="carousel slide" data-bs-ride="false">
-            <div class="carousel-inner">
-                @{
-                    bool isFirst = true;
-                    foreach (var image in Model.Images)
-                    {
-                        <div class="carousel-item @(isFirst ? "active" : "")">
-                            <img src="~/uploads/historyImages/@image.FileName" class="d-block w-100 card-img-top" style="height: 200px; object-fit: cover;" alt="Historical image">
-                        </div>
-                        isFirst = false;
-                    }
-                }
-            </div>
-            @if (Model.Images.Count > 1)
+    <div class="row g-0 h-100">
+        <!-- Image Column (Left) -->
+        <div class="col-md-5">
+            @if (Model.Images.Any())
             {
-                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@Model.Id" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carousel-@Model.Id" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+                <div id="carousel-@Model.Id" class="carousel slide h-100" data-bs-ride="false">
+                    <div class="carousel-inner h-100">
+                        @{
+                            bool isFirst = true;
+                            foreach (var image in Model.Images)
+                            {
+                                <div class="carousel-item h-100 @(isFirst ? "active" : "")">
+                                    <img src="~/uploads/historyImages/@image.FileName" class="d-block w-100 h-100" style="object-fit: cover; border-top-left-radius: 12px; border-bottom-left-radius: 12px;" alt="Historical image">
+                                </div>
+                                isFirst = false;
+                            }
+                        }
+                    </div>
+                    @if (Model.Images.Count > 1)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@Model.Id" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel-@Model.Id" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="bg-light h-100 d-flex align-items-center justify-content-center" style="border-top-left-radius: 12px; border-bottom-left-radius: 12px;">
+                    <i class="fas fa-image fa-3x text-secondary"></i>
+                </div>
             }
         </div>
-    }
-    else
-    {
-        <div class="bg-light card-img-top d-flex align-items-center justify-content-center" style="height: 200px;">
-            <i class="fas fa-image fa-3x text-secondary"></i>
-        </div>
-    }
 
-    <div class="card-body">
-        <h5 class="card-title">@Model.Title</h5>
-        <p class="card-text text-truncate">@Model.Description</p>
-        <div class="d-flex">
-            <a asp-controller="HistoryPost" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary me-2">Read More</a>
-            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@Model.Id">
-                <i class="fas fa-trash-alt"></i> Delete
-            </button>
-        </div>
-    </div>
+        <!-- Content Column (Right) -->
+        <div class="col-md-7 d-flex flex-column">
+            <!-- Delete Button (Top Right) -->
+            <div class="position-absolute" style="top: 1rem; right: 1rem; z-index: 10;">
+                <div class="dropdown">
+                    <button class="btn btn-sm" type="button" style="background-color: #a68b5b; color: white; border: none; border-radius: 8px; padding: 8px 16px;" data-bs-toggle="dropdown" aria-expanded="false">
+                        Delete <i class="fas fa-ellipsis-vertical ms-1"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button class="dropdown-item text-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal-@Model.Id">
+                                <i class="fas fa-trash-alt me-2"></i>Delete Post
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal-@Model.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@Model.Id" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel-@Model.Id">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body d-flex flex-column flex-grow-1">
+                <h2 class="card-title mb-3" style="font-size: 2rem; font-weight: 400; color: #333;">@Model.Title</h2>
+                <div class="card-text flex-grow-1" style="color: #666; line-height: 1.6;">
+                    @{
+                        var description = Model.Description;
+                        var maxLength = 500;
+                        if (description.Length > maxLength)
+                        {
+                            var truncated = description.Substring(0, maxLength);
+                            var lastSpace = truncated.LastIndexOf(' ');
+                            if (lastSpace > 0)
+                            {
+                                truncated = truncated.Substring(0, lastSpace);
+                            }
+                            <span>@truncated...</span>
+                        }
+                        else
+                        {
+                            <span>@description</span>
+                        }
+                    }
                 </div>
-                <div class="modal-body">
-                    Are you sure you want to delete the story "<strong>@Model.Title</strong>"? This action cannot be undone.
+
+                <br />
+
+                <div class="mt-auto">
+                    <a asp-controller="HistoryPost" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-primary">Read More</a>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form asp-controller="HistoryPost" asp-action="Delete" asp-route-id="@Model.Id" method="post">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer text-muted" style="background-color: #f8f9fa; border-top: 1px solid #e9ecef;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="reactions" data-post-id="@Model.Id">
+                        <button class="btn btn-sm reaction-btn" data-reaction="Heart" title="Heart">
+                            <i class="fas fa-heart"></i> <span class="reaction-count heart-count">0</span>
+                        </button>
+                        <button class="btn btn-sm reaction-btn" data-reaction="Like" title="Like">
+                            <i class="fas fa-thumbs-up"></i> <span class="reaction-count like-count">0</span>
+                        </button>
+                        <button class="btn btn-sm reaction-btn" data-reaction="Dislike" title="Dislike">
+                            <i class="fas fa-thumbs-down"></i> <span class="reaction-count dislike-count">0</span>
+                        </button>
+                    </div>
+                    <small>Posted on @Model.CreatedAt.ToString("MMM dd, yyyy")</small>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Replace your existing card-footer in _PostCard.cshtml -->
-    <div class="card-footer text-muted">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="reactions" data-post-id="@Model.Id">
-                <button class="btn btn-sm reaction-btn" data-reaction="Heart" title="Heart">
-                    <i class="fas fa-heart"></i> <span class="reaction-count heart-count">0</span>
-                </button>
-                <button class="btn btn-sm reaction-btn" data-reaction="Like" title="Like">
-                    <i class="fas fa-thumbs-up"></i> <span class="reaction-count like-count">0</span>
-                </button>
-                <button class="btn btn-sm reaction-btn" data-reaction="Dislike" title="Dislike">
-                    <i class="fas fa-thumbs-down"></i> <span class="reaction-count dislike-count">0</span>
-                </button>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade delete-confirmation-modal" id="deleteModal-@Model.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@Model.Id" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel-@Model.Id">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <small>Posted on @Model.CreatedAt.ToString("MMM dd, yyyy")</small>
+            <div class="modal-body">
+                Are you sure you want to delete the story "<strong>@Model.Title</strong>"? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-controller="HistoryPost" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger delete-confirm-btn">Delete</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
