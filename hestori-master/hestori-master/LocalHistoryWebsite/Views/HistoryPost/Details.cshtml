@@ -1,0 +1,67 @@
+﻿@model LocalHistoryWebsite.Models.HistoryPost
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+                </ol>
+            </nav>
+
+            <h1 class="mb-4">@Model.Title</h1>
+
+            <div class="mb-3 text-muted">
+                <small>Posted on @Model.CreatedAt.ToString("MMMM dd, yyyy")</small>
+            </div>
+
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div id="postImagesCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @{
+                            bool isFirst = true;
+                            foreach (var image in Model.Images)
+                            {
+                                <div class="carousel-item @(isFirst ? "active" : "")">
+                                    <img src="~/uploads/historyImages/@image.FileName" class="d-block w-100" style="max-height: 500px; object-fit: contain;" alt="Historical image">
+                                </div>
+                                isFirst = false;
+                            }
+                        }
+                    </div>
+                    @if (Model.Images.Count() > 1)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#postImagesCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#postImagesCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    }
+                </div>
+            }
+
+            <div class="post-content">
+                @* Format the description with proper paragraphs *@
+                @foreach (var paragraph in Model.Description.Split("\n\n"))
+                {
+                    <p>@paragraph</p>
+                }
+            </div>
+
+            <div class="mt-5">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

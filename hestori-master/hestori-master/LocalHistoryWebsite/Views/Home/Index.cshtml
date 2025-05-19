@@ -1,0 +1,35 @@
+﻿@using LocalHistoryWebsite.Models.ViewModels
+@model HomeViewModel
+
+<div class="container">
+    <div class="row my-4">
+        <div class="col-12">
+            <h1 class="text-center">Local History Archive</h1>
+            <p class="lead text-center">Discover the rich history of our locality through stories, photographs, and documents.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <button id="createPostBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Share Your Local History
+            </button>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <partial name="../HistoryPost/_CreatePostModal" model="Model.CreatePostViewModel" />
+
+    <div class="row">
+        @foreach (var post in Model.Posts)
+        {
+            <div class="col-md-4 mb-4">
+                <partial name="../HistoryPost/_PostCard" model="post" />
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/historyPost.js"></script>
+}

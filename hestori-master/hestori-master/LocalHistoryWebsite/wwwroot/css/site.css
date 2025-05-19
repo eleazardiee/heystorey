@@ -1,0 +1,52 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Reaction buttons styling */
+.reaction-btn {
+    margin-right: 8px;
+    transition: all 0.2s ease;
+    border: none;
+    background: transparent;
+    color: #6c757d;
+}
+
+    .reaction-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .reaction-btn[data-reaction="Heart"].active {
+        color: #e25563;
+    }
+
+    .reaction-btn[data-reaction="Like"].active {
+        color: #28a745;
+    }
+
+    .reaction-btn[data-reaction="Dislike"].active {
+        color: #dc3545;
+    }
+
+.reaction-count {
+    font-size: 0.8rem;
+    margin-left: 2px;
+}

@@ -1,0 +1,29 @@
+﻿/* Custom styling for the modal */
+.modal-lg {
+    max-width: 800px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+}
+
+#imagePreviewContainer img {
+    object-fit: cover;
+    height: 120px;
+}
+
+/* Style for the create post button */
+#createPostBtn {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+}
+
+/* Improve form elements */
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+textarea.form-control {
+    min-height: 120px;
+}
